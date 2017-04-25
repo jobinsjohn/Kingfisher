@@ -4,7 +4,11 @@
 //
 //  Created by Wei Wang on 2016/08/31.
 //
+<<<<<<< HEAD
 //  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+=======
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
+>>>>>>> onevcat/master
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -121,7 +125,11 @@ extension Kingfisher where Base: Image {
         #if os(macOS)
             return fixedForRetinaPixel(cgImage: result, to: size)
         #else
+<<<<<<< HEAD
             return Image(cgImage: result)
+=======
+            return Image(cgImage: result, scale: base.scale, orientation: base.imageOrientation)
+>>>>>>> onevcat/master
         #endif
     }
 

@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 15/4/13.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -57,6 +57,10 @@ extension Kingfisher where Base: UIButton {
     {
         guard let resource = resource else {
             base.setImage(placeholder, for: state)
+<<<<<<< HEAD
+=======
+            setWebURL(nil, for: state)
+>>>>>>> onevcat/master
             completionHandler?(nil, nil, .none, nil)
             return .empty
         }
@@ -71,6 +75,9 @@ extension Kingfisher where Base: UIButton {
             with: resource,
             options: options,
             progressBlock: { receivedSize, totalSize in
+                guard resource.downloadURL == self.webURL(for: state) else {
+                    return
+                }
                 if let progressBlock = progressBlock {
                     progressBlock(receivedSize, totalSize)
                 }
@@ -99,7 +106,11 @@ extension Kingfisher where Base: UIButton {
      Nothing will happen if the downloading has already finished.
      */
     public func cancelImageDownloadTask() {
+<<<<<<< HEAD
         imageTask?.downloadTask?.cancel()
+=======
+        imageTask?.cancel()
+>>>>>>> onevcat/master
     }
     
     /**
@@ -128,6 +139,10 @@ extension Kingfisher where Base: UIButton {
     {
         guard let resource = resource else {
             base.setBackgroundImage(placeholder, for: state)
+<<<<<<< HEAD
+=======
+            setBackgroundWebURL(nil, for: state)
+>>>>>>> onevcat/master
             completionHandler?(nil, nil, .none, nil)
             return .empty
         }
@@ -142,6 +157,9 @@ extension Kingfisher where Base: UIButton {
             with: resource,
             options: options,
             progressBlock: { receivedSize, totalSize in
+                guard resource.downloadURL == self.backgroundWebURL(for: state) else {
+                    return
+                }
                 if let progressBlock = progressBlock {
                     progressBlock(receivedSize, totalSize)
                 }
@@ -168,7 +186,11 @@ extension Kingfisher where Base: UIButton {
      Nothing will happen if the downloading has already finished.
      */
     public func cancelBackgroundImageDownloadTask() {
+<<<<<<< HEAD
         backgroundImageTask?.downloadTask?.cancel()
+=======
+        backgroundImageTask?.cancel()
+>>>>>>> onevcat/master
     }
 
 }
@@ -189,7 +211,11 @@ extension Kingfisher where Base: UIButton {
         return webURLs[NSNumber(value:state.rawValue)] as? URL
     }
     
+<<<<<<< HEAD
     fileprivate func setWebURL(_ url: URL, for state: UIControlState) {
+=======
+    fileprivate func setWebURL(_ url: URL?, for state: UIControlState) {
+>>>>>>> onevcat/master
         webURLs[NSNumber(value:state.rawValue)] = url
     }
     
@@ -232,7 +258,11 @@ extension Kingfisher where Base: UIButton {
         return backgroundWebURLs[NSNumber(value:state.rawValue)] as? URL
     }
     
+<<<<<<< HEAD
     fileprivate func setBackgroundWebURL(_ url: URL, for state: UIControlState) {
+=======
+    fileprivate func setBackgroundWebURL(_ url: URL?, for state: UIControlState) {
+>>>>>>> onevcat/master
         backgroundWebURLs[NSNumber(value:state.rawValue)] = url
     }
     

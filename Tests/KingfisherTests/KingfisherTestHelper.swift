@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 15/4/10.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -136,9 +136,15 @@ extension Image {
 }
 
 extension Image {
+<<<<<<< HEAD
     convenience init(fileName: String) {
         let data = Data(fileName: fileName)
         self.init(data: data)!
+=======
+    convenience init?(fileName: String) {
+        let data = Data(fileName: fileName)
+        self.init(data: data)
+>>>>>>> onevcat/master
     }
     
     @discardableResult
@@ -160,6 +166,14 @@ extension Data {
     }
     
     init(named name: String, type: String) {
+<<<<<<< HEAD
         try! self.init(contentsOf: URL(fileURLWithPath: Bundle(for: ImageExtensionTests.self).path(forResource: name, ofType: type)!))
+=======
+        guard let path = Bundle(for: ImageExtensionTests.self).path(forResource: name, ofType: type) else {
+            self.init()
+            return
+        }
+        try! self.init(contentsOf: URL(fileURLWithPath: path))
+>>>>>>> onevcat/master
     }
 }

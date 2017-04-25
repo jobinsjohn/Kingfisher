@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 15/4/10.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -76,7 +76,11 @@ class ImageCacheTests: XCTestCase {
         let expectation = self.expectation(description: "wait for clearing disk cache")
         let key = testKeys[0]
         
+<<<<<<< HEAD
         cache.store(testImage, original: testImageData as? Data, forKey: key, toDisk: true) { () -> () in
+=======
+        cache.store(testImage, original: testImageData as Data?, forKey: key, toDisk: true) { () -> () in
+>>>>>>> onevcat/master
             self.cache.clearMemoryCache()
             let cacheResult = self.cache.isImageCached(forKey: key)
             XCTAssertTrue(cacheResult.cached, "Should be cached")
@@ -94,7 +98,11 @@ class ImageCacheTests: XCTestCase {
     func testClearMemoryCache() {
         let expectation = self.expectation(description: "wait for retrieving image")
         
+<<<<<<< HEAD
         cache.store(testImage, original: testImageData as? Data, forKey: testKeys[0], toDisk: true) { () -> () in
+=======
+        cache.store(testImage, original: testImageData as Data?, forKey: testKeys[0], toDisk: true) { () -> () in
+>>>>>>> onevcat/master
             self.cache.clearMemoryCache()
             self.cache.retrieveImage(forKey: testKeys[0], options: nil, completionHandler: { (image, type) -> () in
                 XCTAssert(image != nil && type == .disk, "Should be cached in disk. But \(type)")
@@ -145,7 +153,7 @@ class ImageCacheTests: XCTestCase {
             } catch _ {
                 files = nil
             }
-            XCTAssert(files?.count == 4, "All test images should be at locaitons. Expected 4, actually \(files?.count)")
+            XCTAssert(files?.count == 4, "All test images should be at locaitons. Expected 4, actually \(String(describing: files?.count))")
             
             expectation.fulfill()
         }
@@ -263,7 +271,11 @@ class ImageCacheTests: XCTestCase {
         let expectation = self.expectation(description: "wait for caching image")
         
         XCTAssert(self.cache.isImageCached(forKey: testKeys[0]).cached == false, "This image should not be cached yet.")
+<<<<<<< HEAD
         self.cache.store(testImage, original: testImageData as? Data, forKey: testKeys[0], toDisk: true) { () -> () in
+=======
+        self.cache.store(testImage, original: testImageData as Data?, forKey: testKeys[0], toDisk: true) { () -> () in
+>>>>>>> onevcat/master
             XCTAssert(self.cache.isImageCached(forKey: testKeys[0]).cached == true, "This image should be already cached.")
             expectation.fulfill()
         }
@@ -274,7 +286,11 @@ class ImageCacheTests: XCTestCase {
     func testRetrievingImagePerformance() {
 
         let expectation = self.expectation(description: "wait for retrieving image")
+<<<<<<< HEAD
         self.cache.store(testImage, original: testImageData as? Data, forKey: testKeys[0], toDisk: true) { () -> () in
+=======
+        self.cache.store(testImage, original: testImageData as Data?, forKey: testKeys[0], toDisk: true) { () -> () in
+>>>>>>> onevcat/master
             self.measure({ () -> Void in
                 for _ in 1 ..< 200 {
                     _ = self.cache.retrieveImageInDiskCache(forKey: testKeys[0])
@@ -289,7 +305,11 @@ class ImageCacheTests: XCTestCase {
     func testCleanDiskCacheNotification() {
         let expectation = self.expectation(description: "wait for retrieving image")
         
+<<<<<<< HEAD
         cache.store(testImage, original: testImageData as? Data, forKey: testKeys[0], toDisk: true) { () -> () in
+=======
+        cache.store(testImage, original: testImageData as Data?, forKey: testKeys[0], toDisk: true) { () -> () in
+>>>>>>> onevcat/master
 
             self.observer = NotificationCenter.default.addObserver(forName: .KingfisherDidCleanDiskCache, object: self.cache, queue: OperationQueue.main, using: { (noti) -> Void in
 
@@ -321,7 +341,11 @@ class ImageCacheTests: XCTestCase {
         let expectation = self.expectation(description: "wait for retrieving image")
         let p = RoundCornerImageProcessor(cornerRadius: 40)
         
+<<<<<<< HEAD
         cache.store(testImage, original: testImageData as? Data, forKey: testKeys[0], toDisk: true) { () -> () in
+=======
+        cache.store(testImage, original: testImageData as Data?, forKey: testKeys[0], toDisk: true) { () -> () in
+>>>>>>> onevcat/master
             
             self.cache.retrieveImage(forKey: testKeys[0], options: [.processor(p)], completionHandler: { (image, type) -> () in
                 
@@ -338,7 +362,11 @@ class ImageCacheTests: XCTestCase {
         let expectation = self.expectation(description: "wait for retrieving image")
         let p = RoundCornerImageProcessor(cornerRadius: 40)
         
+<<<<<<< HEAD
         cache.store(testImage, original: testImageData as? Data, forKey: testKeys[0], processorIdentifier: p.identifier,toDisk: true) { () -> () in
+=======
+        cache.store(testImage, original: testImageData as Data?, forKey: testKeys[0], processorIdentifier: p.identifier,toDisk: true) { () -> () in
+>>>>>>> onevcat/master
             
             self.cache.retrieveImage(forKey: testKeys[0], options: [.processor(p)], completionHandler: { (image, type) -> () in
                 
@@ -357,6 +385,7 @@ class ImageCacheTests: XCTestCase {
         let group = DispatchGroup()
         
         group.enter()
+<<<<<<< HEAD
         cache.store(testImage, original: testImageData as? Data, forKey: testKeys[0], toDisk: true) { () -> () in
             group.leave()
         }
@@ -370,6 +399,21 @@ class ImageCacheTests: XCTestCase {
         }
         group.enter()
         cache.store(testImage, original: testImageData as? Data, forKey: testKeys[3], toDisk: true) { () -> () in
+=======
+        cache.store(testImage, original: testImageData as Data?, forKey: testKeys[0], toDisk: true) { () -> () in
+            group.leave()
+        }
+        group.enter()
+        cache.store(testImage, original: testImageData as Data?, forKey: testKeys[1], toDisk: true) { () -> () in
+            group.leave()
+        }
+        group.enter()
+        cache.store(testImage, original: testImageData as Data?, forKey: testKeys[2], toDisk: true) { () -> () in
+            group.leave()
+        }
+        group.enter()
+        cache.store(testImage, original: testImageData as Data?, forKey: testKeys[3], toDisk: true) { () -> () in
+>>>>>>> onevcat/master
             group.leave()
         }
         

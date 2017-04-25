@@ -4,7 +4,7 @@
 //
 //  Created by Jie Zhang on 14/04/2016.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,10 @@ extension Kingfisher where Base: NSButton {
     {
         guard let resource = resource else {
             base.image = placeholder
+<<<<<<< HEAD
+=======
+            setWebURL(nil)
+>>>>>>> onevcat/master
             completionHandler?(nil, nil, .none, nil)
             return .empty
         }
@@ -69,6 +73,12 @@ extension Kingfisher where Base: NSButton {
             with: resource,
             options: options,
             progressBlock: { receivedSize, totalSize in
+<<<<<<< HEAD
+=======
+                guard resource.downloadURL == self.webURL else {
+                    return
+                }
+>>>>>>> onevcat/master
                 if let progressBlock = progressBlock {
                     progressBlock(receivedSize, totalSize)
                 }
@@ -95,7 +105,11 @@ extension Kingfisher where Base: NSButton {
      Nothing will happen if the downloading has already finished.
      */
     public func cancelImageDownloadTask() {
+<<<<<<< HEAD
         imageTask?.downloadTask?.cancel()
+=======
+        imageTask?.cancel()
+>>>>>>> onevcat/master
     }
     
     /**
@@ -121,6 +135,10 @@ extension Kingfisher where Base: NSButton {
     {
         guard let resource = resource else {
             base.alternateImage = placeholder
+<<<<<<< HEAD
+=======
+            setAlternateWebURL(nil)
+>>>>>>> onevcat/master
             completionHandler?(nil, nil, .none, nil)
             return .empty
         }
@@ -135,6 +153,12 @@ extension Kingfisher where Base: NSButton {
             with: resource,
             options: options,
             progressBlock: { receivedSize, totalSize in
+<<<<<<< HEAD
+=======
+                guard resource.downloadURL == self.alternateWebURL else {
+                    return
+                }
+>>>>>>> onevcat/master
                 if let progressBlock = progressBlock {
                     progressBlock(receivedSize, totalSize)
                 }
@@ -164,7 +188,11 @@ extension Kingfisher where Base: NSButton {
     /// Cancel the alternate image download task bounded to the image view if it is running. 
     /// Nothing will happen if the downloading has already finished.
     public func cancelAlternateImageDownloadTask() {
+<<<<<<< HEAD
         alternateImageTask?.downloadTask?.cancel()
+=======
+        alternateImageTask?.cancel()
+>>>>>>> onevcat/master
     }
 }
 
@@ -182,7 +210,11 @@ extension Kingfisher where Base: NSButton {
         return objc_getAssociatedObject(base, &lastURLKey) as? URL
     }
     
+<<<<<<< HEAD
     fileprivate func setWebURL(_ url: URL) {
+=======
+    fileprivate func setWebURL(_ url: URL?) {
+>>>>>>> onevcat/master
         objc_setAssociatedObject(base, &lastURLKey, url, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
@@ -199,7 +231,11 @@ extension Kingfisher where Base: NSButton {
         return objc_getAssociatedObject(base, &lastAlternateURLKey) as? URL
     }
     
+<<<<<<< HEAD
     fileprivate func setAlternateWebURL(_ url: URL) {
+=======
+    fileprivate func setAlternateWebURL(_ url: URL?) {
+>>>>>>> onevcat/master
         objc_setAssociatedObject(base, &lastAlternateURLKey, url, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     

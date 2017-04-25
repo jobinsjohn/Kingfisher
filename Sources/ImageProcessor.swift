@@ -4,7 +4,11 @@
 //
 //  Created by Wei Wang on 2016/08/26.
 //
+<<<<<<< HEAD
 //  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+=======
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
+>>>>>>> onevcat/master
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -69,11 +73,19 @@ typealias ProcessorImp = ((ImageProcessItem, KingfisherOptionsInfo) -> Image?)
 public extension ImageProcessor {
     
     /// Append an `ImageProcessor` to another. The identifier of the new `ImageProcessor` 
+<<<<<<< HEAD
     /// will be "\(self.identifier)|>\(another.identifier)>".
     ///
     /// - parameter another: An `ImageProcessor` you want to append to `self`.
     ///
     /// - returns: The new `ImageProcessor`. It will process the image in the order
+=======
+    /// will be "\(self.identifier)|>\(another.identifier)".
+    ///
+    /// - parameter another: An `ImageProcessor` you want to append to `self`.
+    ///
+    /// - returns: The new `ImageProcessor` will process the image in the order
+>>>>>>> onevcat/master
     ///            of the two processors concatenated.
     public func append(another: ImageProcessor) -> ImageProcessor {
         let newIdentifier = identifier.appending("|>\(another.identifier)")
@@ -104,6 +116,7 @@ public struct DefaultImageProcessor: ImageProcessor {
     /// A default `DefaultImageProcessor` could be used across.
     public static let `default` = DefaultImageProcessor()
     
+<<<<<<< HEAD
     public let identifier = ""
     
     /// Initialize a `DefaultImageProcessor`
@@ -111,12 +124,37 @@ public struct DefaultImageProcessor: ImageProcessor {
     /// - returns: An initialized `DefaultImageProcessor`.
     public init() {}
     
+=======
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+    public let identifier = ""
+    
+    /// Initialize a `DefaultImageProcessor`
+    public init() {}
+    
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    /// 
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+>>>>>>> onevcat/master
     public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
         switch item {
         case .image(let image):
             return image
         case .data(let data):
+<<<<<<< HEAD
             return Kingfisher<Image>.image(data: data, scale: options.scaleFactor, preloadAllGIFData: options.preloadAllGIFData)
+=======
+            return Kingfisher<Image>.image(
+                data: data,
+                scale: options.scaleFactor,
+                preloadAllGIFData: options.preloadAllGIFData,
+                onlyFirstFrame: options.onlyLoadFirstFrame)
+>>>>>>> onevcat/master
         }
     }
 }
@@ -124,6 +162,12 @@ public struct DefaultImageProcessor: ImageProcessor {
 /// Processor for making round corner images. Only CG-based images are supported in macOS, 
 /// if a non-CG image passed in, the processor will do nothing.
 public struct RoundCornerImageProcessor: ImageProcessor {
+<<<<<<< HEAD
+=======
+    
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+>>>>>>> onevcat/master
     public let identifier: String
 
     /// Corner radius will be applied in processing.
@@ -138,8 +182,11 @@ public struct RoundCornerImageProcessor: ImageProcessor {
     /// - parameter targetSize:   Target size of output image should be. If `nil`, 
     ///                           the image will keep its original size after processing.
     ///                           Default is `nil`.
+<<<<<<< HEAD
     ///
     /// - returns: An initialized `RoundCornerImageProcessor`.
+=======
+>>>>>>> onevcat/master
     public init(cornerRadius: CGFloat, targetSize: CGSize? = nil) {
         self.cornerRadius = cornerRadius
         self.targetSize = targetSize
@@ -150,17 +197,30 @@ public struct RoundCornerImageProcessor: ImageProcessor {
         }
     }
     
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    ///
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
     public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
         switch item {
         case .image(let image):
             let size = targetSize ?? image.kf.size
+<<<<<<< HEAD
             return image.kf.image(withRoundRadius: cornerRadius, fit: size, scale: options.scaleFactor)
+=======
+            return image.kf.image(withRoundRadius: cornerRadius, fit: size)
+>>>>>>> onevcat/master
         case .data(_):
             return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
     }
 }
 
+<<<<<<< HEAD
 /// Processor for resizing images. Only CG-based images are supported in macOS.
 public struct ResizingImageProcessor: ImageProcessor {
     public let identifier: String
@@ -182,6 +242,76 @@ public struct ResizingImageProcessor: ImageProcessor {
         switch item {
         case .image(let image):
             return image.kf.resize(to: targetSize)
+=======
+
+/// Specify how a size adjusts itself to fit a target size.
+///
+/// - none: Not scale the content.
+/// - aspectFit: Scale the content to fit the size of the view by maintaining the aspect ratio.
+/// - aspectFill: Scale the content to fill the size of the view
+public enum ContentMode {
+    case none
+    case aspectFit
+    case aspectFill
+}
+
+/// Processor for resizing images. Only CG-based images are supported in macOS.
+public struct ResizingImageProcessor: ImageProcessor {
+    
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+    public let identifier: String
+    
+    /// The reference size for resizing operation.
+    public let referenceSize: CGSize
+    
+    /// Target content mode of output image should be.
+    /// Default to ContentMode.none
+    public let targetContentMode: ContentMode
+    
+    /// Initialize a `ResizingImageProcessor`.
+    ///
+    /// - Parameters:
+    ///   - referenceSize: The reference size for resizing operation.
+    ///   - mode: Target content mode of output image should be.
+    ///
+    /// - Note:
+    ///   The instance of `ResizingImageProcessor` will follow its `mode` property
+    ///   and try to resizing the input images to fit or fill the `referenceSize`.
+    ///   That means if you are using a `mode` besides of `.none`, you may get an
+    ///   image with its size not be the same as the `referenceSize`.
+    ///
+    ///   **Example**: With input image size: {100, 200}, 
+    ///   `referenceSize`: {100, 100}, `mode`: `.aspectFit`,
+    ///   you will get an output image with size of {50, 100}, which "fit"s
+    ///   the `referenceSize`.
+    ///
+    ///   If you need an output image exactly to be a specified size, append or use
+    ///   a `CroppingImageProcessor`.
+    public init(referenceSize: CGSize, mode: ContentMode = .none) {
+        self.referenceSize = referenceSize
+        self.targetContentMode = mode
+        
+        if mode == .none {
+            self.identifier = "com.onevcat.Kingfisher.ResizingImageProcessor(\(referenceSize))"
+        } else {
+            self.identifier = "com.onevcat.Kingfisher.ResizingImageProcessor(\(referenceSize), \(mode))"
+        }
+    }
+    
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    ///
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+    public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
+        switch item {
+        case .image(let image):
+            return image.kf.resize(to: referenceSize, for: targetContentMode)
+>>>>>>> onevcat/master
         case .data(_):
             return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
@@ -191,6 +321,12 @@ public struct ResizingImageProcessor: ImageProcessor {
 /// Processor for adding blur effect to images. `Accelerate.framework` is used underhood for 
 /// a better performance. A simulated Gaussian blur with specified blur radius will be applied.
 public struct BlurImageProcessor: ImageProcessor {
+<<<<<<< HEAD
+=======
+    
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+>>>>>>> onevcat/master
     public let identifier: String
     
     /// Blur radius for the simulated Gaussian blur.
@@ -199,13 +335,24 @@ public struct BlurImageProcessor: ImageProcessor {
     /// Initialize a `BlurImageProcessor`
     ///
     /// - parameter blurRadius: Blur radius for the simulated Gaussian blur.
+<<<<<<< HEAD
     ///
     /// - returns: An initialized `BlurImageProcessor`.
+=======
+>>>>>>> onevcat/master
     public init(blurRadius: CGFloat) {
         self.blurRadius = blurRadius
         self.identifier = "com.onevcat.Kingfisher.BlurImageProcessor(\(blurRadius))"
     }
     
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    ///
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
     public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
         switch item {
         case .image(let image):
@@ -220,7 +367,13 @@ public struct BlurImageProcessor: ImageProcessor {
 /// Processor for adding an overlay to images. Only CG-based images are supported in macOS.
 public struct OverlayImageProcessor: ImageProcessor {
     
+<<<<<<< HEAD
     public var identifier: String
+=======
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+    public let identifier: String
+>>>>>>> onevcat/master
     
     /// Overlay color will be used to overlay the input image.
     public let overlay: Color
@@ -233,14 +386,28 @@ public struct OverlayImageProcessor: ImageProcessor {
     /// - parameter overlay:  Overlay color will be used to overlay the input image.
     /// - parameter fraction: Fraction will be used when overlay the color to image. 
     ///                       From 0.0 to 1.0. 0.0 means solid color, 1.0 means transparent overlay.
+<<<<<<< HEAD
     ///
     /// - returns: An initialized `OverlayImageProcessor`.
+=======
+>>>>>>> onevcat/master
     public init(overlay: Color, fraction: CGFloat = 0.5) {
         self.overlay = overlay
         self.fraction = fraction
         self.identifier = "com.onevcat.Kingfisher.OverlayImageProcessor(\(overlay.hex)_\(fraction))"
     }
     
+<<<<<<< HEAD
+=======
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    ///
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+>>>>>>> onevcat/master
     public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
         switch item {
         case .image(let image):
@@ -248,6 +415,7 @@ public struct OverlayImageProcessor: ImageProcessor {
         case .data(_):
             return (DefaultImageProcessor.default >> self).process(item: item, options: options)
         }
+<<<<<<< HEAD
     }
 }
 
@@ -267,8 +435,37 @@ public struct TintImageProcessor: ImageProcessor {
     public init(tint: Color) {
         self.tint = tint
         self.identifier = "com.onevcat.Kingfisher.TintImageProcessor(\(tint.hex))"
+=======
+>>>>>>> onevcat/master
+    }
+}
+
+/// Processor for tint images with color. Only CG-based images are supported.
+public struct TintImageProcessor: ImageProcessor {
+    
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+    public let identifier: String
+    
+    /// Tint color will be used to tint the input image.
+    public let tint: Color
+    
+    /// Initialize a `TintImageProcessor`
+    ///
+    /// - parameter tint: Tint color will be used to tint the input image.
+    public init(tint: Color) {
+        self.tint = tint
+        self.identifier = "com.onevcat.Kingfisher.TintImageProcessor(\(tint.hex))"
     }
     
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    ///
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
     public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
         switch item {
         case .image(let image):
@@ -283,6 +480,11 @@ public struct TintImageProcessor: ImageProcessor {
 /// watchOS is not supported.
 public struct ColorControlsProcessor: ImageProcessor {
     
+<<<<<<< HEAD
+=======
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+>>>>>>> onevcat/master
     public let identifier: String
     
     /// Brightness changing to image.
@@ -303,8 +505,11 @@ public struct ColorControlsProcessor: ImageProcessor {
     /// - parameter contrast:   Contrast changing to image.
     /// - parameter saturation: Saturation changing to image.
     /// - parameter inputEV:    InputEV changing to image.
+<<<<<<< HEAD
     ///
     /// - returns: An initialized `ColorControlsProcessor`
+=======
+>>>>>>> onevcat/master
     public init(brightness: CGFloat, contrast: CGFloat, saturation: CGFloat, inputEV: CGFloat) {
         self.brightness = brightness
         self.contrast = contrast
@@ -313,6 +518,14 @@ public struct ColorControlsProcessor: ImageProcessor {
         self.identifier = "com.onevcat.Kingfisher.ColorControlsProcessor(\(brightness)_\(contrast)_\(saturation)_\(inputEV))"
     }
     
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    ///
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
     public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
         switch item {
         case .image(let image):
@@ -326,6 +539,7 @@ public struct ColorControlsProcessor: ImageProcessor {
 /// Processor for applying black and white effect to images. Only CG-based images are supported.
 /// watchOS is not supported.
 public struct BlackWhiteProcessor: ImageProcessor {
+<<<<<<< HEAD
     public let identifier = "com.onevcat.Kingfisher.BlackWhiteProcessor"
     
     /// Initialize a `BlackWhiteProcessor`
@@ -333,12 +547,92 @@ public struct BlackWhiteProcessor: ImageProcessor {
     /// - returns: An initialized `BlackWhiteProcessor`
     public init() {}
     
+=======
+    
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+    public let identifier = "com.onevcat.Kingfisher.BlackWhiteProcessor"
+    
+    /// Initialize a `BlackWhiteProcessor`
+    public init() {}
+    
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    ///
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+>>>>>>> onevcat/master
     public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
         return ColorControlsProcessor(brightness: 0.0, contrast: 1.0, saturation: 0.0, inputEV: 0.7)
             .process(item: item, options: options)
     }
 }
 
+<<<<<<< HEAD
+=======
+/// Processor for cropping an image. Only CG-based images are supported.
+/// watchOS is not supported.
+public struct CroppingImageProcessor: ImageProcessor {
+    
+    /// Identifier of the processor.
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+    public let identifier: String
+    
+    /// Target size of output image should be.
+    public let size: CGSize
+    
+    /// Anchor point from which the output size should be calculate.
+    /// The anchor point is consisted by two values between 0.0 and 1.0.
+    /// It indicates a related point in current image. 
+    /// See `CroppingImageProcessor.init(size:anchor:)` for more.
+    public let anchor: CGPoint
+    
+    /// Initialize a `CroppingImageProcessor`
+    ///
+    /// - Parameters:
+    ///   - size: Target size of output image should be.
+    ///   - anchor: The anchor point from which the size should be calculated.
+    ///             Default is `CGPoint(x: 0.5, y: 0.5)`, which means the center of input image.
+    /// - Note:
+    ///   The anchor point is consisted by two values between 0.0 and 1.0.
+    ///   It indicates a related point in current image, eg: (0.0, 0.0) for top-left
+    ///   corner, (0.5, 0.5) for center and (1.0, 1.0) for bottom-right corner.
+    ///   The `size` property of `CroppingImageProcessor` will be used along with
+    ///   `anchor` to calculate a target rectange in the size of image.
+    ///    
+    ///   The target size will be automatically calculated with a reasonable behavior.
+    ///   For example, when you have an image size of `CGSize(width: 100, height: 100)`,
+    ///   and a target size of `CGSize(width: 20, height: 20)`: 
+    ///   - with a (0.0, 0.0) anchor (top-left), the crop rect will be `{0, 0, 20, 20}`; 
+    ///   - with a (0.5, 0.5) anchor (center), it will be `{40, 40, 20, 20}`
+    ///   - while with a (1.0, 1.0) anchor (bottom-right), it will be `{80, 80, 20, 20}`
+    public init(size: CGSize, anchor: CGPoint = CGPoint(x: 0.5, y: 0.5)) {
+        self.size = size
+        self.anchor = anchor
+        self.identifier = "com.onevcat.Kingfisher.CroppingImageProcessor(\(size)_\(anchor))"
+    }
+    
+    /// Process an input `ImageProcessItem` item to an image for this processor.
+    ///
+    /// - parameter item:    Input item which will be processed by `self`
+    /// - parameter options: Options when processing the item.
+    ///
+    /// - returns: The processed image.
+    ///
+    /// - Note: See documentation of `ImageProcessor` protocol for more.
+    public func process(item: ImageProcessItem, options: KingfisherOptionsInfo) -> Image? {
+        switch item {
+        case .image(let image):
+            return image.kf.crop(to: size, anchorOn: anchor)
+        case .data(_): return (DefaultImageProcessor.default >> self).process(item: item, options: options)
+        }
+    }
+}
+
+>>>>>>> onevcat/master
 /// Concatenate two `ImageProcessor`s. `ImageProcessor.appen(another:)` is used internally.
 ///
 /// - parameter left:  First processor.
@@ -368,3 +662,28 @@ fileprivate extension Color {
         return String(format:"#%08x", rgba)
     }
 }
+<<<<<<< HEAD
+=======
+
+// MARK: - Deprecated
+extension ResizingImageProcessor {
+    /// Reference size of output image should follow.
+    @available(*, deprecated,
+    message: "targetSize are renamed. Use `referenceSize` instead",
+    renamed: "referenceSize")
+    public var targetSize: CGSize {
+        return referenceSize
+    }
+    
+    /// Initialize a `ResizingImageProcessor`
+    ///
+    /// - parameter targetSize: Reference size of output image should follow.
+    /// - parameter contentMode: Target content mode of output image should be.
+    @available(*, deprecated,
+    message: "targetSize and contentMode are renamed. Use `init(referenceSize:mode:)` instead",
+    renamed: "init(referenceSize:mode:)")
+    public init(targetSize: CGSize, contentMode: ContentMode = .none) {
+        self.init(referenceSize: targetSize, mode: contentMode)
+    }
+}
+>>>>>>> onevcat/master

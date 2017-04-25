@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 15/4/6.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -90,7 +90,11 @@ public enum KingfisherError: Int {
     case invalidURL = 20000
     
     /// The downloading task is cancelled before started.
+<<<<<<< HEAD
     case downloadCanelledBeforeStarting = 30000
+=======
+    case downloadCancelledBeforeStarting = 30000
+>>>>>>> onevcat/master
 }
 
 /// Key will be used in the `userInfo` of `.invalidStatusCode`
@@ -166,7 +170,11 @@ extension AuthenticationChallengeResponsable {
 }
 
 /// `ImageDownloader` represents a downloading manager for requesting the image with a URL from server.
+<<<<<<< HEAD
 open class ImageDownloader: NSObject {
+=======
+open class ImageDownloader {
+>>>>>>> onevcat/master
     
     class ImageFetchLoad {
         var contents = [(callback: CallbackPair, options: KingfisherOptionsInfo)]()
@@ -234,9 +242,7 @@ open class ImageDownloader: NSObject {
         processQueue = DispatchQueue(label: "com.onevcat.Kingfisher.ImageDownloader.Process.\(name)", attributes: .concurrent)
         
         sessionHandler = ImageDownloaderSessionHandler()
-        
-        super.init()
-        
+
         // Provide a default implement for challenge responder.
         authenticationChallengeResponder = sessionHandler
         session = URLSession(configuration: sessionConfiguration, delegate: sessionHandler, delegateQueue: .main)
@@ -281,6 +287,7 @@ extension ImageDownloader {
               completionHandler: ImageDownloaderCompletionHandler?) -> RetrieveImageDownloadTask?
     {
         if let retrieveImageTask = retrieveImageTask, retrieveImageTask.cancelledBeforeDownloadStarting {
+            completionHandler?(nil, NSError(domain: KingfisherErrorDomain, code: KingfisherError.downloadCancelledBeforeStarting.rawValue, userInfo: nil), nil, nil)
             return nil
         }
         
@@ -292,7 +299,11 @@ extension ImageDownloader {
 
         if let modifier = options?.modifier {
             guard let r = modifier.modified(for: request) else {
+<<<<<<< HEAD
                 completionHandler?(nil, NSError(domain: KingfisherErrorDomain, code: KingfisherError.downloadCanelledBeforeStarting.rawValue, userInfo: nil), nil, nil)
+=======
+                completionHandler?(nil, NSError(domain: KingfisherErrorDomain, code: KingfisherError.downloadCancelledBeforeStarting.rawValue, userInfo: nil), nil, nil)
+>>>>>>> onevcat/master
                 return nil
             }
             request = r
@@ -492,6 +503,7 @@ class ImageDownloaderSessionHandler: NSObject, URLSessionDataDelegate, Authentic
                 let completionHandler = content.callback.completionHandler
                 let callbackQueue = options.callbackDispatchQueue
                 
+<<<<<<< HEAD
                 let processoor = options.processor
                 
                 var image = imageCache[processoor.identifier]
@@ -501,6 +513,17 @@ class ImageDownloaderSessionHandler: NSObject, URLSessionDataDelegate, Authentic
                     // Add the processed image to cache. 
                     // If `image` is nil, nothing will happen (since the key is not existing before).
                     imageCache[processoor.identifier] = image
+=======
+                let processor = options.processor
+                
+                var image = imageCache[processor.identifier]
+                if image == nil {
+                    image = processor.process(item: .data(data), options: options)
+                    
+                    // Add the processed image to cache. 
+                    // If `image` is nil, nothing will happen (since the key is not existing before).
+                    imageCache[processor.identifier] = image
+>>>>>>> onevcat/master
                 }
                 
                 if let image = image {

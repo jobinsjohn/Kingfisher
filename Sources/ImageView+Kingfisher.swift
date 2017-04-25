@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 15/4/6.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -59,6 +59,10 @@ extension Kingfisher where Base: ImageView {
     {
         guard let resource = resource else {
             base.image = placeholder
+<<<<<<< HEAD
+=======
+            setWebURL(nil)
+>>>>>>> onevcat/master
             completionHandler?(nil, nil, .none, nil)
             return .empty
         }
@@ -74,7 +78,11 @@ extension Kingfisher where Base: ImageView {
         
         setWebURL(resource.downloadURL)
 
+<<<<<<< HEAD
         if shouldPreloadAllGIF() {
+=======
+        if base.shouldPreloadAllGIF() {
+>>>>>>> onevcat/master
             options.append(.preloadAllGIFData)
         }
         
@@ -82,6 +90,9 @@ extension Kingfisher where Base: ImageView {
             with: resource,
             options: options,
             progressBlock: { receivedSize, totalSize in
+                guard resource.downloadURL == self.webURL else {
+                    return
+                }
                 if let progressBlock = progressBlock {
                     progressBlock(receivedSize, totalSize)
                 }
@@ -136,11 +147,15 @@ extension Kingfisher where Base: ImageView {
      Nothing will happen if the downloading has already finished.
      */
     public func cancelDownloadTask() {
+<<<<<<< HEAD
         imageTask?.downloadTask?.cancel()
     }
     
     func shouldPreloadAllGIF() -> Bool {
         return true
+=======
+        imageTask?.cancel()
+>>>>>>> onevcat/master
     }
 }
 
@@ -156,7 +171,11 @@ extension Kingfisher where Base: ImageView {
         return objc_getAssociatedObject(base, &lastURLKey) as? URL
     }
     
+<<<<<<< HEAD
     fileprivate func setWebURL(_ url: URL) {
+=======
+    fileprivate func setWebURL(_ url: URL?) {
+>>>>>>> onevcat/master
         objc_setAssociatedObject(base, &lastURLKey, url, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     
@@ -285,6 +304,13 @@ extension ImageView {
     fileprivate func kf_setImageTask(_ task: RetrieveImageTask?) { kf.setImageTask(task) }
     @available(*, deprecated, message: "Extensions directly on image views are deprecated.", renamed: "kf.setWebURL")
     fileprivate func kf_setWebURL(_ url: URL) { kf.setWebURL(url) }
+<<<<<<< HEAD
     @available(*, deprecated, message: "Extensions directly on image views are deprecated.", renamed: "kf.shouldPreloadAllGIF")
     func shouldPreloadAllGIF() -> Bool { return kf.shouldPreloadAllGIF() }
+=======
+}
+
+extension ImageView {
+    func shouldPreloadAllGIF() -> Bool { return true }
+>>>>>>> onevcat/master
 }

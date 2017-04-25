@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 16/1/6.
 //
-//  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +33,8 @@ private var durationKey: Void?
 import UIKit
 import MobileCoreServices
 private var imageSourceKey: Void?
-private var animatedImageDataKey: Void?
 #endif
+private var animatedImageDataKey: Void?
 
 import ImageIO
 import CoreGraphics
@@ -46,6 +46,18 @@ import CoreImage
 
 // MARK: - Image Properties
 extension Kingfisher where Base: Image {
+<<<<<<< HEAD
+=======
+    fileprivate(set) var animatedImageData: Data? {
+        get {
+            return objc_getAssociatedObject(base, &animatedImageDataKey) as? Data
+        }
+        set {
+            objc_setAssociatedObject(base, &animatedImageDataKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+    
+>>>>>>> onevcat/master
     #if os(macOS)
     var cgImage: CGImage? {
         return base.cgImage(forProposedRect: nil, context: nil, hints: nil)
@@ -85,6 +97,7 @@ extension Kingfisher where Base: Image {
     }
     
     var scale: CGFloat {
+<<<<<<< HEAD
     return base.scale
     }
     
@@ -94,6 +107,17 @@ extension Kingfisher where Base: Image {
     
     var duration: TimeInterval {
     return base.duration
+=======
+        return base.scale
+    }
+    
+    var images: [Image]? {
+        return base.images
+    }
+    
+    var duration: TimeInterval {
+        return base.duration
+>>>>>>> onevcat/master
     }
     
     fileprivate(set) var imageSource: ImageSource? {
@@ -105,6 +129,7 @@ extension Kingfisher where Base: Image {
         }
     }
     
+<<<<<<< HEAD
     fileprivate(set) var animatedImageData: Data? {
     get {
         return objc_getAssociatedObject(base, &animatedImageDataKey) as? Data
@@ -117,6 +142,11 @@ extension Kingfisher where Base: Image {
     var size: CGSize {
         return base.size
     }
+=======
+    var size: CGSize {
+        return base.size
+    }
+>>>>>>> onevcat/master
     #endif
 }
 
@@ -141,11 +171,19 @@ extension Kingfisher where Base: Image {
     }
     #else
     static func image(cgImage: CGImage, scale: CGFloat, refImage: Image?) -> Image {
+<<<<<<< HEAD
     if let refImage = refImage {
         return Image(cgImage: cgImage, scale: scale, orientation: refImage.imageOrientation)
     } else {
         return Image(cgImage: cgImage, scale: scale, orientation: .up)
     }
+=======
+        if let refImage = refImage {
+            return Image(cgImage: cgImage, scale: scale, orientation: refImage.imageOrientation)
+        } else {
+            return Image(cgImage: cgImage, scale: scale, orientation: .up)
+        }
+>>>>>>> onevcat/master
     }
     
     /**
@@ -173,7 +211,7 @@ extension Kingfisher where Base: Image {
 // MARK: - Image Representation
 extension Kingfisher where Base: Image {
     // MARK: - PNG
-    func pngRepresentation() -> Data? {
+    public func pngRepresentation() -> Data? {
         #if os(macOS)
             guard let cgimage = cgImage else {
                 return nil
@@ -186,7 +224,7 @@ extension Kingfisher where Base: Image {
     }
     
     // MARK: - JPEG
-    func jpegRepresentation(compressionQuality: CGFloat) -> Data? {
+    public func jpegRepresentation(compressionQuality: CGFloat) -> Data? {
         #if os(macOS)
             guard let cgImage = cgImage else {
                 return nil
@@ -199,6 +237,7 @@ extension Kingfisher where Base: Image {
     }
     
     // MARK: - GIF
+<<<<<<< HEAD
     func gifRepresentation() -> Data? {
         #if os(macOS)
             return gifRepresentation(duration: 0.0, repeatCount: 0)
@@ -231,19 +270,31 @@ extension Kingfisher where Base: Image {
         }
         
         return CGImageDestinationFinalize(destination) ? data.copy() as? Data : nil
+=======
+    public func gifRepresentation() -> Data? {
+        return animatedImageData
+>>>>>>> onevcat/master
     }
     #endif
 }
 
 // MARK: - Create images from data
 extension Kingfisher where Base: Image {
+<<<<<<< HEAD
     static func animated(with data: Data, scale: CGFloat = 1.0, duration: TimeInterval = 0.0, preloadAll: Bool) -> Image? {
+=======
+    static func animated(with data: Data, scale: CGFloat = 1.0, duration: TimeInterval = 0.0, preloadAll: Bool, onlyFirstFrame: Bool = false) -> Image? {
+>>>>>>> onevcat/master
         
         func decode(from imageSource: CGImageSource, for options: NSDictionary) -> ([Image], TimeInterval)? {
             
             //Calculates frame duration for a gif frame out of the kCGImagePropertyGIFDictionary dictionary
-            func frameDuration(from gifInfo: NSDictionary) -> Double {
+            func frameDuration(from gifInfo: NSDictionary?) -> Double {
                 let gifDefaultFrameDuration = 0.100
+                
+                guard let gifInfo = gifInfo else {
+                    return gifDefaultFrameDuration
+                }
                 
                 let unclampedDelayTime = gifInfo[kCGImagePropertyGIFUnclampedDelayTime as String] as? NSNumber
                 let delayTime = gifInfo[kCGImagePropertyGIFDelayTime as String] as? NSNumber
@@ -262,21 +313,33 @@ extension Kingfisher where Base: Image {
                 guard let imageRef = CGImageSourceCreateImageAtIndex(imageSource, i, options) else {
                     return nil
                 }
-                
+
                 if frameCount == 1 {
                     // Single frame
                     gifDuration = Double.infinity
                 } else {
+                    
                     // Animated GIF
+<<<<<<< HEAD
                     guard let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, i, nil),
                         let gifInfo = (properties as NSDictionary)[kCGImagePropertyGIFDictionary as String] as? NSDictionary else
                     {
+=======
+                    guard let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, i, nil) else {
+>>>>>>> onevcat/master
                         return nil
                     }
+
+                    let gifInfo = (properties as NSDictionary)[kCGImagePropertyGIFDictionary as String] as? NSDictionary
                     gifDuration += frameDuration(from: gifInfo)
                 }
                 
                 images.append(Kingfisher<Image>.image(cgImage: imageRef, scale: scale, refImage: nil))
+<<<<<<< HEAD
+=======
+                
+                if onlyFirstFrame { break }
+>>>>>>> onevcat/master
             }
             
             return (images, gifDuration)
@@ -292,6 +355,7 @@ extension Kingfisher where Base: Image {
             guard let (images, gifDuration) = decode(from: imageSource, for: options) else {
                 return nil
             }
+<<<<<<< HEAD
             let image = Image(data: data)
             image?.kf.images = images
             image?.kf.duration = gifDuration
@@ -316,10 +380,39 @@ extension Kingfisher where Base: Image {
     }
     
     static func image(data: Data, scale: CGFloat, preloadAllGIFData: Bool) -> Image? {
+=======
+            let image: Image?
+            if onlyFirstFrame {
+                image = images.first
+            } else {
+                image = Image(data: data)
+                image?.kf.images = images
+                image?.kf.duration = gifDuration
+            }
+            image?.kf.animatedImageData = data
+            return image
+        #else
+            
+            let image: Image?
+            if preloadAll || onlyFirstFrame {
+                guard let (images, gifDuration) = decode(from: imageSource, for: options) else { return nil }
+                image = onlyFirstFrame ? images.first : Kingfisher<Image>.animated(with: images, forDuration: duration <= 0.0 ? gifDuration : duration)
+            } else {
+                image = Image(data: data)
+                image?.kf.imageSource = ImageSource(ref: imageSource)
+            }
+            image?.kf.animatedImageData = data
+            return image
+        #endif
+    }
+    
+    static func image(data: Data, scale: CGFloat, preloadAllGIFData: Bool, onlyFirstFrame: Bool) -> Image? {
+>>>>>>> onevcat/master
         var image: Image?
         
         #if os(macOS)
             switch data.kf.imageFormat {
+<<<<<<< HEAD
             case .JPEG: image = Image(data: data)
             case .PNG: image = Image(data: data)
             case .GIF: image = Kingfisher<Image>.animated(with: data, scale: scale, duration: 0.0, preloadAll: preloadAllGIFData)
@@ -331,6 +424,37 @@ extension Kingfisher where Base: Image {
             case .PNG: image = Image(data: data, scale: scale)
             case .GIF: image = Kingfisher<Image>.animated(with: data, scale: scale, duration: 0.0, preloadAll: preloadAllGIFData)
             case .unknown: image = Image(data: data, scale: scale)
+=======
+            case .JPEG:
+                image = Image(data: data)
+            case .PNG:
+                image = Image(data: data)
+            case .GIF:
+                image = Kingfisher<Image>.animated(
+                    with: data,
+                    scale: scale,
+                    duration: 0.0,
+                    preloadAll: preloadAllGIFData,
+                    onlyFirstFrame: onlyFirstFrame)
+            case .unknown:
+                image = Image(data: data)
+            }
+        #else
+            switch data.kf.imageFormat {
+            case .JPEG:
+                image = Image(data: data, scale: scale)
+            case .PNG:
+                image = Image(data: data, scale: scale)
+            case .GIF:
+                image = Kingfisher<Image>.animated(
+                    with: data,
+                    scale: scale,
+                    duration: 0.0,
+                    preloadAll: preloadAllGIFData,
+                    onlyFirstFrame: onlyFirstFrame)
+            case .unknown:
+                image = Image(data: data, scale: scale)
+>>>>>>> onevcat/master
             }
         #endif
         
@@ -340,20 +464,34 @@ extension Kingfisher where Base: Image {
 
 // MARK: - Image Transforming
 extension Kingfisher where Base: Image {
+<<<<<<< HEAD
+=======
+
+>>>>>>> onevcat/master
     // MARK: - Round Corner
     /// Create a round corner image based on `self`.
     ///
     /// - parameter radius: The round corner radius of creating image.
     /// - parameter size:   The target size of creating image.
+<<<<<<< HEAD
     /// - parameter scale:  The image scale of creating image.
+=======
+>>>>>>> onevcat/master
     ///
     /// - returns: An image with round corner of `self`.
     ///
     /// - Note: This method only works for CG-based image.
+<<<<<<< HEAD
     public func image(withRoundRadius radius: CGFloat, fit size: CGSize, scale: CGFloat) -> Image {
         
         guard let cgImage = cgImage else {
             assertionFailure("[Kingfisher] Round corder image only works for CG-based image.")
+=======
+    public func image(withRoundRadius radius: CGFloat, fit size: CGSize) -> Image {
+        
+        guard let cgImage = cgImage else {
+            assertionFailure("[Kingfisher] Round corner image only works for CG-based image.")
+>>>>>>> onevcat/master
             return base
         }
         
@@ -381,11 +519,17 @@ extension Kingfisher where Base: Image {
     func resize(to size: CGSize, for contentMode: UIViewContentMode) -> Image {
         switch contentMode {
         case .scaleAspectFit:
+<<<<<<< HEAD
             let newSize = self.size.kf.constrained(size)
             return resize(to: newSize)
         case .scaleAspectFill:
             let newSize = self.size.kf.filling(size)
             return resize(to: newSize)
+=======
+            return resize(to: size, for: .aspectFit)
+        case .scaleAspectFill:
+            return resize(to: size, for: .aspectFill)
+>>>>>>> onevcat/master
         default:
             return resize(to: size)
         }
@@ -393,7 +537,10 @@ extension Kingfisher where Base: Image {
     #endif
     
     // MARK: - Resize
+<<<<<<< HEAD
     
+=======
+>>>>>>> onevcat/master
     /// Resize `self` to an image of new size.
     ///
     /// - parameter size: The target size.
@@ -406,6 +553,7 @@ extension Kingfisher where Base: Image {
         guard let cgImage = cgImage else {
             assertionFailure("[Kingfisher] Resize only works for CG-based image.")
             return base
+<<<<<<< HEAD
         }
         
         let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
@@ -416,6 +564,52 @@ extension Kingfisher where Base: Image {
                 base.draw(in: rect)
             #endif
         }
+=======
+        }
+        
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
+        return draw(cgImage: cgImage, to: size) {
+            #if os(macOS)
+                base.draw(in: rect, from: NSRect.zero, operation: .copy, fraction: 1.0)
+            #else
+                base.draw(in: rect)
+            #endif
+        }
+    }
+    
+    /// Resize `self` to an image of new size, respecting the content mode.
+    ///
+    /// - Parameters:
+    ///   - size: The target size.
+    ///   - contentMode: Content mode of output image should be.
+    /// - Returns: An image with new size.
+    public func resize(to size: CGSize, for contentMode: ContentMode) -> Image {
+        switch contentMode {
+        case .aspectFit:
+            let newSize = self.size.kf.constrained(size)
+            return resize(to: newSize)
+        case .aspectFill:
+            let newSize = self.size.kf.filling(size)
+            return resize(to: newSize)
+        default:
+            return resize(to: size)
+        }
+    }
+    
+    public func crop(to size: CGSize, anchorOn anchor: CGPoint) -> Image {
+        guard let cgImage = cgImage else {
+            assertionFailure("[Kingfisher] Crop only works for CG-based image.")
+            return base
+        }
+        
+        let rect = self.size.kf.constrainedRect(for: size, anchor: anchor)
+        guard let image = cgImage.cropping(to: rect.scaled(scale)) else {
+            assertionFailure("[Kingfisher] Cropping image failed.")
+            return base
+        }
+        
+        return Kingfisher.image(cgImage: image, scale: scale, refImage: base)
+>>>>>>> onevcat/master
     }
     
     // MARK: - Blur
@@ -439,9 +633,14 @@ extension Kingfisher where Base: Image {
             // http://www.w3.org/TR/SVG/filters.html#feGaussianBlurElement
             // let d = floor(s * 3*sqrt(2*pi)/4 + 0.5)
             // if d is odd, use three box-blurs of size 'd', centered on the output pixel.
-            let s = max(radius, 2.0)
+            let s = Float(max(radius, 2.0))
             // We will do blur on a resized image (*0.5), so the blur radius could be half as well.
-            var targetRadius = floor((Double(s * 3.0) * sqrt(2 * M_PI) / 4.0 + 0.5))
+            
+            // Fix the slow compiling time for Swift 3. 
+            // See https://github.com/onevcat/Kingfisher/issues/611
+            let pi2 = 2 * Float.pi
+            let sqrtPi2 = sqrt(pi2)
+            var targetRadius = floor(s * 3.0 * sqrtPi2 / 4.0 + 0.5)
             
             if targetRadius.isEven {
                 targetRadius += 1
@@ -460,6 +659,7 @@ extension Kingfisher where Base: Image {
             let h = Int(size.height)
             let rowBytes = Int(CGFloat(cgImage.bytesPerRow))
             
+<<<<<<< HEAD
             let inDataPointer = UnsafeMutablePointer<UInt8>.allocate(capacity: rowBytes * Int(h))
             inDataPointer.initialize(to: 0)
             defer {
@@ -476,10 +676,26 @@ extension Kingfisher where Base: Image {
                                           space: cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB(),
                                           bitmapInfo: bitmapInfo.rawValue) else
             {
+=======
+            func createEffectBuffer(_ context: CGContext) -> vImage_Buffer {
+                let data = context.data
+                let width = vImagePixelCount(context.width)
+                let height = vImagePixelCount(context.height)
+                let rowBytes = context.bytesPerRow
+                
+                return vImage_Buffer(data: data, height: height, width: width, rowBytes: rowBytes)
+            }
+
+            guard let context = beginContext(size: size) else {
+>>>>>>> onevcat/master
                 assertionFailure("[Kingfisher] Failed to create CG context for blurring image.")
                 return base
             }
+            defer { endContext() }
+
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: w, height: h))
             
+<<<<<<< HEAD
             context.draw(cgImage, in: CGRect(x: 0, y: 0, width: w, height: h))
             
             
@@ -493,12 +709,23 @@ extension Kingfisher where Base: Image {
         }
             
             var outBuffer = vImage_Buffer(data: outDataPointer, height: vImagePixelCount(h), width: vImagePixelCount(w), rowBytes: rowBytes)
+=======
+            var inBuffer = createEffectBuffer(context)
+            
+            guard let outContext = beginContext(size: size) else {
+                assertionFailure("[Kingfisher] Failed to create CG context for blurring image.")
+                return base
+            }
+            defer { endContext() }
+            var outBuffer = createEffectBuffer(outContext)
+>>>>>>> onevcat/master
             
             for _ in 0 ..< iterations {
                 vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, nil, 0, 0, UInt32(targetRadius), UInt32(targetRadius), nil, vImage_Flags(kvImageEdgeExtend))
                 (inBuffer, outBuffer) = (outBuffer, inBuffer)
             }
             
+<<<<<<< HEAD
             guard let outContext = CGContext(data: inDataPointer,
                                              width: w,
                                              height: h,
@@ -511,10 +738,12 @@ extension Kingfisher where Base: Image {
                 return base
             }
             
+=======
+>>>>>>> onevcat/master
             #if os(macOS)
                 let result = outContext.makeImage().flatMap { fixedForRetinaPixel(cgImage: $0, to: size) }
             #else
-                let result = outContext.makeImage().flatMap { Image(cgImage: $0) }
+                let result = outContext.makeImage().flatMap { Image(cgImage: $0, scale: base.scale, orientation: base.imageOrientation) }
             #endif
             guard let blurredImage = result else {
                 assertionFailure("[Kingfisher] Can not make an blurred image within this context.")
@@ -609,6 +838,7 @@ extension Kingfisher where Base: Image {
         #else
             if images != nil { return base }
         #endif
+<<<<<<< HEAD
         
         guard let imageRef = self.cgImage else {
             assertionFailure("[Kingfisher] Decoding only works for CG-based image.")
@@ -622,6 +852,21 @@ extension Kingfisher where Base: Image {
             return base
         }
         
+=======
+        
+        guard let imageRef = self.cgImage else {
+            assertionFailure("[Kingfisher] Decoding only works for CG-based image.")
+            return base
+        }
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        guard let context = beginContext(size: CGSize(width: imageRef.width, height: imageRef.height)) else {
+            assertionFailure("[Kingfisher] Decoding fails to create a valid context.")
+            return base
+        }
+        
+        defer { endContext() }
+        
+>>>>>>> onevcat/master
         let rect = CGRect(x: 0, y: 0, width: imageRef.width, height: imageRef.height)
         context.draw(imageRef, in: rect)
         let decompressedImageRef = context.makeImage()
@@ -718,6 +963,7 @@ extension CGSizeProxy {
 
     private var aspectRatio: CGFloat {
         return base.height == 0.0 ? 1.0 : base.width / base.height
+<<<<<<< HEAD
     }
 }
 
@@ -794,34 +1040,140 @@ extension Kingfisher where Base: Image {
 
 extension CGContext {
     static func createARGBContext(from imageRef: CGImage) -> CGContext? {
+=======
+    }
+    
+    
+    func constrainedRect(for size: CGSize, anchor: CGPoint) -> CGRect {
         
-        let w = imageRef.width
-        let h = imageRef.height
-        let bytesPerRow = w * 4
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let unifiedAnchor = CGPoint(x: anchor.x.clamped(to: 0.0...1.0),
+                                    y: anchor.y.clamped(to: 0.0...1.0))
         
-        let data = malloc(bytesPerRow * h)
-        defer {
-            free(data)
-        }
+        let x = unifiedAnchor.x * base.width - unifiedAnchor.x * size.width
+        let y = unifiedAnchor.y * base.height - unifiedAnchor.y * size.height
+        let r = CGRect(x: x, y: y, width: size.width, height: size.height)
         
-        let bitmapInfo = imageRef.bitmapInfo.fixed
-        
-        // Create the bitmap context. We want pre-multiplied ARGB, 8-bits
-        // per component. Regardless of what the source image format is
-        // (CMYK, Grayscale, and so on) it will be converted over to the format
-        // specified here.
-        return CGContext(data: data,
-                         width: w,
-                         height: h,
-                         bitsPerComponent: imageRef.bitsPerComponent,
-                         bytesPerRow: bytesPerRow,
-                         space: colorSpace,
-                         bitmapInfo: bitmapInfo.rawValue)
+        let ori = CGRect(origin: CGPoint.zero, size: base)
+        return ori.intersection(r)
     }
 }
 
-extension Double {
+extension CGRect {
+    func scaled(_ scale: CGFloat) -> CGRect {
+        return CGRect(x: origin.x * scale, y: origin.y * scale,
+                      width: size.width * scale, height: size.height * scale)
+    }
+}
+
+extension Comparable {
+    func clamped(to limits: ClosedRange<Self>) -> Self {
+        return min(max(self, limits.lowerBound), limits.upperBound)
+    }
+}
+
+extension Kingfisher where Base: Image {
+    
+    func beginContext(size: CGSize) -> CGContext? {
+        #if os(macOS)
+            guard let rep = NSBitmapImageRep(
+                bitmapDataPlanes: nil,
+                pixelsWide: Int(size.width),
+                pixelsHigh: Int(size.height),
+                bitsPerSample: cgImage?.bitsPerComponent ?? 8,
+                samplesPerPixel: 4,
+                hasAlpha: true,
+                isPlanar: false,
+                colorSpaceName: NSCalibratedRGBColorSpace,
+                bytesPerRow: 0,
+                bitsPerPixel: 0) else
+            {
+                assertionFailure("[Kingfisher] Image representation cannot be created.")
+                return nil
+            }
+            rep.size = size
+            NSGraphicsContext.saveGraphicsState()
+            guard let context = NSGraphicsContext(bitmapImageRep: rep) else {
+                assertionFailure("[Kingfisher] Image contenxt cannot be created.")
+                return nil
+            }
+            
+            NSGraphicsContext.setCurrent(context)
+            return context.cgContext
+        #else
+            UIGraphicsBeginImageContextWithOptions(size, false, scale)
+            let context = UIGraphicsGetCurrentContext()
+            context?.scaleBy(x: 1.0, y: -1.0)
+            context?.translateBy(x: 0, y: -size.height)
+            return context
+        #endif
+    }
+    
+    func endContext() {
+        #if os(macOS)
+            NSGraphicsContext.restoreGraphicsState()
+        #else
+            UIGraphicsEndImageContext()
+        #endif
+    }
+    
+    func draw(cgImage: CGImage?, to size: CGSize, draw: ()->()) -> Image {
+        #if os(macOS)
+        guard let rep = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: Int(size.width),
+            pixelsHigh: Int(size.height),
+            bitsPerSample: cgImage?.bitsPerComponent ?? 8,
+            samplesPerPixel: 4,
+            hasAlpha: true,
+            isPlanar: false,
+            colorSpaceName: NSCalibratedRGBColorSpace,
+            bytesPerRow: 0,
+            bitsPerPixel: 0) else
+        {
+            assertionFailure("[Kingfisher] Image representation cannot be created.")
+            return base
+        }
+        rep.size = size
+>>>>>>> onevcat/master
+        
+        NSGraphicsContext.saveGraphicsState()
+        
+        let context = NSGraphicsContext(bitmapImageRep: rep)
+        NSGraphicsContext.setCurrent(context)
+        draw()
+        NSGraphicsContext.restoreGraphicsState()
+        
+<<<<<<< HEAD
+        let bitmapInfo = imageRef.bitmapInfo.fixed
+=======
+        let outputImage = Image(size: size)
+        outputImage.addRepresentation(rep)
+        return outputImage
+        #else
+            
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        defer { UIGraphicsEndImageContext() }
+        draw()
+        return UIGraphicsGetImageFromCurrentImageContext() ?? base
+>>>>>>> onevcat/master
+        
+        #endif
+    }
+    
+    #if os(macOS)
+    func fixedForRetinaPixel(cgImage: CGImage, to size: CGSize) -> Image {
+        
+        let image = Image(cgImage: cgImage, size: base.size)
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: size)
+        
+        return draw(cgImage: cgImage, to: self.size) {
+            image.draw(in: rect, from: NSRect.zero, operation: .copy, fraction: 1.0)
+        }
+    }
+    #endif
+}
+
+extension Float {
     var isEven: Bool {
         return truncatingRemainder(dividingBy: 2.0) == 0
     }
@@ -856,7 +1208,11 @@ extension Image {
     message: "Extensions directly on Image are deprecated. Use `kf.image(withRoundRadius:fit:scale:)` instead.",
     renamed: "kf.image")
     public func kf_image(withRoundRadius radius: CGFloat, fit size: CGSize, scale: CGFloat) -> Image {
+<<<<<<< HEAD
         return kf.image(withRoundRadius: radius, fit: size, scale: scale)
+=======
+        return kf.image(withRoundRadius: radius, fit: size)
+>>>>>>> onevcat/master
     }
     
     // MARK: - Resize
@@ -936,3 +1292,14 @@ extension Image {
         return kf.adjusted(brightness: brightness, contrast: contrast, saturation: saturation, inputEV: inputEV)
     }
 }
+<<<<<<< HEAD
+=======
+
+extension Kingfisher where Base: Image {
+    @available(*, deprecated,
+    message: "`scale` is not used. Use the version without scale instead. (Remove the `scale` argument)")
+    public func image(withRoundRadius radius: CGFloat, fit size: CGSize, scale: CGFloat) -> Image {
+        return image(withRoundRadius: radius, fit: size)
+    }
+}
+>>>>>>> onevcat/master

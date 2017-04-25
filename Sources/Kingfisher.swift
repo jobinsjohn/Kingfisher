@@ -4,7 +4,11 @@
 //
 //  Created by Wei Wang on 16/9/14.
 //
+<<<<<<< HEAD
 //  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+=======
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
+>>>>>>> onevcat/master
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal

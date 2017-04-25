@@ -4,7 +4,11 @@
 //
 //  Created by Wei Wang on 2016/09/02.
 //
+<<<<<<< HEAD
 //  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
+=======
+//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
+>>>>>>> onevcat/master
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -77,9 +81,18 @@ public struct DefaultCacheSerializer: CacheSerializer {
     }
     
     public func image(with data: Data, options: KingfisherOptionsInfo?) -> Image? {
+<<<<<<< HEAD
         let scale = (options ?? KingfisherEmptyOptionsInfo).scaleFactor
         let preloadAllGIFData = (options ?? KingfisherEmptyOptionsInfo).preloadAllGIFData
         
         return Kingfisher<Image>.image(data: data, scale: scale, preloadAllGIFData: preloadAllGIFData)
+=======
+        let options = options ?? KingfisherEmptyOptionsInfo
+        return Kingfisher<Image>.image(
+            data: data,
+            scale: options.scaleFactor,
+            preloadAllGIFData: options.preloadAllGIFData,
+            onlyFirstFrame: options.onlyLoadFirstFrame)
+>>>>>>> onevcat/master
     }
 }
