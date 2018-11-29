@@ -5,9 +5,13 @@
 //  Created by Wei Wang on 2016/09/05.
 //
 <<<<<<< HEAD
+<<<<<<< HEAD
 //  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
 =======
 //  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
+>>>>>>> onevcat/master
+=======
+//  Copyright (c) 2018 Wei Wang <onevcat@gmail.com>
 >>>>>>> onevcat/master
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy

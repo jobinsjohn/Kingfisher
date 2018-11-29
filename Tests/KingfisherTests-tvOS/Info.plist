@@ -16,6 +16,7 @@
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
 <<<<<<< HEAD
+<<<<<<< HEAD
 	<string>3.2.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
@@ -27,6 +28,13 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1017</string>
+>>>>>>> onevcat/master
+=======
+	<string>4.10.1</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1354</string>
 >>>>>>> onevcat/master
 </dict>
 </plist>

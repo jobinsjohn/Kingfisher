@@ -5,9 +5,13 @@
 //  Created by Wei Wang on 2016/09/02.
 //
 <<<<<<< HEAD
+<<<<<<< HEAD
 //  Copyright (c) 2016 Wei Wang <onevcat@gmail.com>
 =======
 //  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
+>>>>>>> onevcat/master
+=======
+//  Copyright (c) 2018 Wei Wang <onevcat@gmail.com>
 >>>>>>> onevcat/master
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -68,7 +72,7 @@ public struct DefaultCacheSerializer: CacheSerializer {
     
     public func data(with image: Image, original: Data?) -> Data? {
         let imageFormat = original?.kf.imageFormat ?? .unknown
-        
+
         let data: Data?
         switch imageFormat {
         case .PNG: data = image.kf.pngRepresentation()
@@ -76,7 +80,7 @@ public struct DefaultCacheSerializer: CacheSerializer {
         case .GIF: data = image.kf.gifRepresentation()
         case .unknown: data = original ?? image.kf.normalized.kf.pngRepresentation()
         }
-        
+
         return data
     }
     
@@ -91,7 +95,7 @@ public struct DefaultCacheSerializer: CacheSerializer {
         return Kingfisher<Image>.image(
             data: data,
             scale: options.scaleFactor,
-            preloadAllGIFData: options.preloadAllGIFData,
+            preloadAllAnimationData: options.preloadAllAnimationData,
             onlyFirstFrame: options.onlyLoadFirstFrame)
 >>>>>>> onevcat/master
     }

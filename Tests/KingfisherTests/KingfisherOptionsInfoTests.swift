@@ -4,7 +4,7 @@
 //
 //  Created by Wei Wang on 16/1/4.
 //
-//  Copyright (c) 2017 Wei Wang <onevcat@gmail.com>
+//  Copyright (c) 2018 Wei Wang <onevcat@gmail.com>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -42,8 +42,8 @@ class KingfisherOptionsInfoTests: XCTestCase {
     
     func testEmptyOptionsShouldParseCorrectly() {
         let options = KingfisherEmptyOptionsInfo
-        XCTAssertTrue(options.targetCache === ImageCache.default)
-        XCTAssertTrue(options.downloader === ImageDownloader.default)
+        XCTAssertTrue(options.targetCache === nil)
+        XCTAssertTrue(options.downloader === nil)
 
 #if !os(macOS)
         switch options.transition {
@@ -54,6 +54,7 @@ class KingfisherOptionsInfoTests: XCTestCase {
         
         XCTAssertEqual(options.downloadPriority, URLSessionTask.defaultPriority)
         XCTAssertFalse(options.forceRefresh)
+        XCTAssertFalse(options.fromMemoryCacheOrRefresh)
         XCTAssertFalse(options.cacheMemoryOnly)
         XCTAssertFalse(options.backgroundDecode)
         XCTAssertEqual(options.callbackDispatchQueue.label, DispatchQueue.main.label)
@@ -62,6 +63,10 @@ class KingfisherOptionsInfoTests: XCTestCase {
 <<<<<<< HEAD
 =======
         XCTAssertFalse(options.onlyLoadFirstFrame)
+<<<<<<< HEAD
+>>>>>>> onevcat/master
+=======
+        XCTAssertFalse(options.cacheOriginalImage)
 >>>>>>> onevcat/master
     }
     
@@ -86,6 +91,7 @@ class KingfisherOptionsInfoTests: XCTestCase {
             .transition(transition),
             .downloadPriority(0.8),
             .forceRefresh,
+            .fromMemoryCacheOrRefresh,
             .cacheMemoryOnly,
             .onlyFromCache,
             .backgroundDecode,
@@ -97,7 +103,12 @@ class KingfisherOptionsInfoTests: XCTestCase {
             .keepCurrentImageWhileLoading
 =======
             .keepCurrentImageWhileLoading,
+<<<<<<< HEAD
             .onlyLoadFirstFrame
+>>>>>>> onevcat/master
+=======
+            .onlyLoadFirstFrame,
+            .cacheOriginalImage
 >>>>>>> onevcat/master
         ]
         
@@ -113,6 +124,7 @@ class KingfisherOptionsInfoTests: XCTestCase {
         
         XCTAssertEqual(options.downloadPriority, 0.8)
         XCTAssertTrue(options.forceRefresh)
+        XCTAssertTrue(options.fromMemoryCacheOrRefresh)
         XCTAssertTrue(options.cacheMemoryOnly)
         XCTAssertTrue(options.onlyFromCache)
         XCTAssertTrue(options.backgroundDecode)
@@ -125,6 +137,21 @@ class KingfisherOptionsInfoTests: XCTestCase {
 <<<<<<< HEAD
 =======
         XCTAssertTrue(options.onlyLoadFirstFrame)
+<<<<<<< HEAD
+>>>>>>> onevcat/master
+=======
+        XCTAssertTrue(options.cacheOriginalImage)
+    }
+    
+    func testOptionCouldBeOverwritten() {
+        var options: KingfisherOptionsInfo = [.downloadPriority(0.5), .onlyFromCache]
+        XCTAssertEqual(options.downloadPriority, 0.5)
+        
+        options.append(.downloadPriority(0.8))
+        XCTAssertEqual(options.downloadPriority, 0.8)
+        
+        options.append(.downloadPriority(1.0))
+        XCTAssertEqual(options.downloadPriority, 1.0)
 >>>>>>> onevcat/master
     }
 }
