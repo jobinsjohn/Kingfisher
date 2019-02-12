@@ -4,6 +4,7 @@ Pod::Spec.new do |s|
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   s.version      = "3.2.1"
 =======
   s.version      = "3.6.2"
@@ -13,6 +14,9 @@ Pod::Spec.new do |s|
 >>>>>>> onevcat/master
 =======
   s.version      = "5.1.0"
+>>>>>>> onevcat/master
+=======
+  s.version      = "5.1.1"
 >>>>>>> onevcat/master
   s.summary      = "A lightweight and pure Swift implemented library for downloading and cacheing image from the web."
 

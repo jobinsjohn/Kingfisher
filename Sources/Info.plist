@@ -18,6 +18,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	<string>3.2.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
@@ -43,6 +44,13 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1525</string>
+>>>>>>> onevcat/master
+=======
+	<string>5.1.1</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1541</string>
 >>>>>>> onevcat/master
 	<key>NSPrincipalClass</key>
 	<string></string>
